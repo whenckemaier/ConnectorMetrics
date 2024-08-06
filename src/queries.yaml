@@ -1,0 +1,3 @@
+promql:
+  - metric_id: xqrnhm62r7kd
+    query: 'avg(probe_http_duration_seconds)'

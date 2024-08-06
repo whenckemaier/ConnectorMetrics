@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: queries-config
+  namespace: hubble
+data:
+  queries.yaml: |
+    promql:
+      - metric_id: xqrnhm62r7kd
+        query: 'avg(probe_http_duration_seconds{instance="https://auth.clinicorp.com/user/login"})'

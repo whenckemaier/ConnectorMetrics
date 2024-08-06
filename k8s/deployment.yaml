@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: statuspage-updater
+  namespace: hubble
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: statuspage-updater
+  template:
+    metadata:
+      labels:
+        app: statuspage-updater
+    spec:
+      containers:
+      - name: statuspage-updater
+        image: us-east1-docker.pkg.dev/sre-sandbox1/observability-tools/statuspage-pusher-metrics:0.0.3
+        env: 
+        - name: STATUSPAGE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: statuspage-secrets 
+              key: STATUSPAGE_API_KEY
+        - name: STATUSPAGE_PAGE_ID
+          valueFrom:
+            secretKeyRef:
+              name: statuspage-secrets
+              key: STATUSPAGE_PAGE_ID
+        ports:
+        - containerPort: 9137
+        volumeMounts:
+        - name: queries-volume
+          mountPath: /app/src/queries.yaml
+          subPath: queries.yaml
+        resources:
+          limits:
+            cpu: 500m
+            memory: 400Mi
+          requests: 
+            cpu: 300m
+            memory: 200Mi
+      volumes:
+      - name: queries-volume
+        configMap: 
+          name: queries-config
