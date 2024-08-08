@@ -1,7 +1,5 @@
-PROJECT_ID :=  
-REGION := 
-REPO_NAME := 
-IMAGE_NAME := 
+include .env
+export $(shell sed 's/=.*//' .env)
 VERSION_FILE := .version
 
 define increment_version
