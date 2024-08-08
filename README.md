@@ -39,13 +39,13 @@ PAGE_ID=your-page-id
 
 #### Optional:
 
-To use the Makefile to build and push the Docker image to the GCP Artifact Registry:
+To use the Makefile to build and push the Docker image to the GCP Artifact Registry you need to include the below variables in your .env file:
 
-```makefile
-PROJECT_ID :=  
-REGION := 
-REPO_NAME := 
-IMAGE_NAME := 
+```sh
+PROJECT_ID=  
+REGION= 
+REPO_NAME= 
+IMAGE_NAME= 
 ```
 
 ### 2. Start Application
@@ -67,7 +67,7 @@ docker build -t your-image-name:tag .
 
 Execute Docker container:
 ```sh
-docker run -d --name connector-metrics -p 9137:9137 --env-file .env your-image-name:tag
+docker run -d --name connector_metrics -p 9137:9137 --env-file .env your-image-name:tag
 ```
 
 Check Metrics
