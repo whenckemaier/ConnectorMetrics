@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: statuspage-updater
+  name: connector-metrics
   namespace: hubble
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: statuspage-updater
+      app: connector-metrics
   template:
     metadata:
       labels:
-        app: statuspage-updater
+        app: connector-metrics
     spec:
       containers:
-      - name: statuspage-updater
-        image: us-east1-docker.pkg.dev/sre-sandbox1/observability-tools/statuspage-pusher-metrics:0.0.3
+      - name: connector-metrics
+        image: your-image-repo:tag
         env: 
         - name: STATUSPAGE_API_KEY
           valueFrom:
