@@ -7,14 +7,14 @@ const register = new Registry();
 collectDefaultMetrics({ register });
 
 export const prometheusCounter = new Counter({
-    name: 'pushermetrics_prometeus_requests_total',
+    name: 'connectormetrics_prometeus_requests_total',
     help: 'Total number of requests to Prometheus by status',
     labelNames: ['status'],
     registers: [register],
 });
 
 export const statuspageCounter = new Counter({
-    name: 'pushermetrics_statuspage_updates_total',
+    name: 'connectormetrics_statuspage_updates_total',
     help: 'Total number of updates to StatusPage by status',
     labelNames: ['status'],
     registers: [register],
