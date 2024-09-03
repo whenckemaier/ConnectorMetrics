@@ -15,7 +15,7 @@ endef
 build:
 	@echo "Building Docker image..."
 	$(call increment_version)
-	docker build -t $(REGION)-docker.pkg.dev/$(PROJECT_ID)/$(REPO_NAME)/$(IMAGE_NAME):$(NEW_VERSION) .
+	docker build --platform linux/amd64 -t $(REGION)-docker.pkg.dev/$(PROJECT_ID)/$(REPO_NAME)/$(IMAGE_NAME):$(NEW_VERSION) .
 
 push: build
 	@echo "Pushing Docker image..."
