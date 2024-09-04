@@ -1,0 +1,21 @@
+{{- if .Values.serviceMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "connector-metrics.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ include "connector-metrics.name" . }}
+    release: prometheus
+    {{- include "connector-metrics.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "connector-metrics.name" . }}
+  endpoints:
+  - port: metrics
+    path: /metrics
+    interval: 30s
+    scheme: http
+    scrapeTimeout: 25s
+{{- end }}

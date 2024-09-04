@@ -1,16 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "connectormetrics.fullname" . }}
+  name: {{ include "connector-metrics.fullname" . }}
+  namespace: {{ .Values.namespace }}
   labels:
-    {{- include "connectormetrics.labels" . | nindent 4 }}
+    {{- include "connector-metrics.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "connectormetrics.selectorLabels" . | nindent 6 }}
+      {{- include "connector-metrics.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +19,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "connectormetrics.labels" . | nindent 8 }}
+        {{- include "connector-metrics.labels" . | nindent 8 }}
 	{{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -27,7 +28,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "connectormetrics.serviceAccountName" . }}
+      serviceAccountName: {{ include "connector-metrics.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -36,18 +37,41 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: PROMETHEUS_URL
+            value: {{ .Values.prometheus.url | quote }}
+          - name: STATUSPAGE_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.name }}
+                key: STATUSPAGE_API_KEY
+          - name: STATUSPAGE_PAGE_ID
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.name }}
+                key: STATUSPAGE_PAGE_ID
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
-              port: http
+              path: /health
+              scheme: HTTP
+              port: {{ .Values.service.port | default 9137 }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds | default 30 }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds | default 10 }}
+            successThreshold: 1
+            timeoutSeconds: 5
           readinessProbe:
             httpGet:
-              path: /
-              port: http
+              path: /health
+              scheme: HTTP
+              port: {{ .Values.service.port | default 9137 }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds | default 30 }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds | default 10 }}
+            successThreshold: 1
+            timeoutSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}

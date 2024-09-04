@@ -15,17 +15,19 @@ spec:
     spec:
       containers:
       - name: connector-metrics
-        image: your-image-repo:tag
+        image: us-east1-docker.pkg.dev/sre-sandbox1/observability-tools/connector_metrics:1.0.3
         env: 
+        - name: PROMETHEUS_URL
+          value: http://prometheus-kube-prometheus-prometheus:9090/api/v1/query
         - name: STATUSPAGE_API_KEY
           valueFrom:
             secretKeyRef:
-              name: statuspage-secrets 
+              name: connectormetrics-statuspage-secrets
               key: STATUSPAGE_API_KEY
         - name: STATUSPAGE_PAGE_ID
           valueFrom:
             secretKeyRef:
-              name: statuspage-secrets
+              name: connectormetrics-statuspage-secrets
               key: STATUSPAGE_PAGE_ID
         ports:
         - containerPort: 9137
@@ -43,4 +45,4 @@ spec:
       volumes:
       - name: queries-volume
         configMap: 
-          name: queries-config
+          name: connectormetrics-queries-config

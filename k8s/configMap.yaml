@@ -6,5 +6,5 @@ metadata:
 data:
   queries.yaml: |
     promql:
-      - metric_id: xqrnhm62r7kd
+      - metric_id: sn7xypp88q4t
         query: 'avg(probe_http_duration_seconds)'

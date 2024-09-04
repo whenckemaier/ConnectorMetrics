@@ -87,9 +87,9 @@ kubectl apply -f ./k8s/configMap.yaml
 
 2. Create a Secret for API_KEY and PAGE_ID
 ```sh
-kubectl create secret generic statuspage-secrets \
-  --from-literal=API_KEY=your-api-key \
-  --from-literal=PAGE_ID=your-page-id
+kubectl create secret generic connectormetrics-statuspage-secrets -n hubble \
+  --from-literal=STATUSPAGE_API_KEY=your-api-key \
+  --from-literal=STATUSPAGE_PAGE_ID=your-page-id
 ```
 
 3. Create a Deployment

@@ -20,6 +20,10 @@ export const statuspageCounter = new Counter({
     registers: [register],
 });
 
+app.get('/health', (req, res) => {
+    res.status(200).send('OK');
+});
+
 app.get('/metrics', async (req, res) => {
     res.set('Content-Type', register.contentType);
     res.end(await register.metrics());
