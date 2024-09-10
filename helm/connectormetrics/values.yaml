@@ -47,6 +47,11 @@ prometheus:
 secrets:
   name: connectormetrics-statuspage-secrets
 
+configMap:
+  queries:
+    - metric_id: "7x111tyw0q53"
+      query: 'avg(probe_http_duration_seconds)'
+
 ingress:
   enabled: false
 
