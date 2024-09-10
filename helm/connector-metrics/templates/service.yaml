@@ -2,16 +2,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "connector-metrics.fullname" . }}
-  namespace: {{ .Values.namespace }}
   labels:
-    app: {{ include "connector-metrics.fullname" . }}
-    {{ include "connector-metrics.labels" . }}
+    {{- include "connector-metrics.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+      targetPort: http
       protocol: TCP
       name: metrics
   selector:
-    app: {{ include "connector-metrics.fullname" . }}
+    {{- include "connector-metrics.selectorLabels" . | nindent 4 }}
